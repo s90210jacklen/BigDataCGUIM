@@ -88,7 +88,7 @@ NBA1415<-fetch_NBAPlayerStatistics("14-15")
 San<-subset(NBA1415,Team=='SAN')
 San
 San[order(San$GamesPlayed,decreasing = T),"Name"]
-
+San[order(San$GamesPlayed,decreasing = T),c("Name","GamesPlayed")]
 #24
 str(iris)
 str(NBA1415)
