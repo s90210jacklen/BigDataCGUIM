@@ -1,0 +1,67 @@
+---
+title: "NBA 2014-2015球季 各隊分析"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##把資料讀進來的程式碼
+```{r echo=T}
+if (!require('SportsAnalytics')){
+  install.packages("SportsAnalytics")
+  library(SportsAnalytics)
+}
+NBA1415<-fetch_NBAPlayerStatistics("14-15")
+```
+
+##各隊最辛苦的球員
+
+依據各隊總上場時間(分鐘)最多的球員
+
+```{r echo=T}
+MaxMinutesPlayed<-aggregate(TotalMinutesPlayed~Team,NBA1415,max)
+NBA1415MaxMinutesPlayed<-merge(NBA1415,MaxMinutesPlayed)
+output<-NBA1415MaxMinutesPlayed[order(NBA1415MaxMinutesPlayed$TotalMinutesPlayed,decreasing = T),c("Team","Name","TotalMinutesPlayed")]
+library(knitr)
+kable(output, digits=2)
+```
+
+
+##各隊得分王
+
+依據各隊總得分最高之球員
+
+```{r echo=T}
+MaxPoint<-aggregate(TotalPoints~Team,NBA1415,max)
+NBA1415MaxPoint<-merge(NBA1415,MaxPoint)
+output<-NBA1415MaxPoint[order(NBA1415MaxPoint$TotalPoints,decreasing = T),c("Team","Name","TotalPoints")]
+library(knitr)
+kable(output, digits=2)
+```
+
+##各隊最有效率的球員
+
+依據各隊員(總得分/出戰分鐘數)最高之球員
+
+```{r echo=T}
+NBA1415$effcient<- NBA1415$TotalPoints / NBA1415$TotalMinutesPlayed
+Maxeffcient<-aggregate(effcient~Team,NBA1415,max)
+NBA1415Maxeffcient<-merge(NBA1415,Maxeffcient)
+output<-NBA1415Maxeffcient[order(NBA1415Maxeffcient$effcient,decreasing = T),c("Team","Name","effcient")]
+library(knitr)
+kable(output, digits=2)
+```
+
+##各隊三分球出手最準的球員
+
+依據(三分出手命中/三分出手次數) 最高之球員
+
+```{r echo=T}
+NBA1415$accuracy<- NBA1415$ThreesMade / NBA1415$ThreesAttempted
+Maxaccuracy<-aggregate(accuracy~Team,NBA1415,max)
+NBA1415Maxaccuracy<-merge(NBA1415,Maxaccuracy)
+output<-NBA1415Maxaccuracy[order(NBA1415Maxaccuracy$accuracy,decreasing = T),c("Team","Name","accuracy")]
+library(knitr)
+kable(output, digits=2)
+```
